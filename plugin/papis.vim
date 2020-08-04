@@ -60,7 +60,7 @@ endfunction
 function! s:Papis(searchline)
   let l:searchinp = a:searchline
   if l:searchinp ==# ''
-    if s:getPapisBackend() ==# "whoosh"
+    if s:getPapisBackend() =~# "whoosh"
       let l:searchinp = '"*"'
     endif
   endif
@@ -70,7 +70,9 @@ endfunction
 command! -bang -nargs=* Papis call s:Papis('<args>')
 
 function! s:get_citeref(cite, full_list)
-  for l:ref in a:full_list
+  for l:item in a:full_list
+    " remove the windows new line
+    let l:ref = substitute(l:item, "", "", "g")
     if a:cite ==# substitute(l:ref, "/", "", "g")
       return l:ref
     endif
@@ -78,7 +80,7 @@ function! s:get_citeref(cite, full_list)
 endfunction
 
 function! s:get_all_citerefs()
-  return systemlist('papis list "ref:*" --format "{doc[ref]}"')
+  return systemlist('papis list --all "ref:*" --format "{doc[ref]}"')
 endfunction
 
 function! s:get_cite_under_cursor()
@@ -100,7 +102,7 @@ function! s:get_cite_under_cursor()
 endfunction
 
 function! s:PapisView()
-  if s:getPapisBackend() !=# "whoosh"
+  if s:getPapisBackend() !~# "whoosh"
     echom "PapisView only works for Papis with whoosh as database-backend at the moment"
     return
   endif
