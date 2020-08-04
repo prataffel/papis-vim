@@ -64,7 +64,7 @@ function! s:Papis(searchline)
       let l:searchinp = '"*"'
     endif
   endif
-  call fzf#run(fzf#wrap({'source': 'papis list ' . l:searchinp . ' --format ' . g:PapisFormat . ' @{doc[ref]}"', 'sink*': function('s:handler'), 'options': '--multi --expect=ctrl-y --print-query'}))
+  call fzf#run(fzf#wrap({'source': 'papis list --all ' . l:searchinp . ' --format ' . g:PapisFormat . ' @{doc[ref]}"', 'sink*': function('s:handler'), 'options': '--multi --expect=ctrl-y --print-query'}))
 endfunction
 
 command! -bang -nargs=* Papis call s:Papis('<args>')
